@@ -1,0 +1,3 @@
+exclude .gitattributes
+exclude .gitignore
+exclude src/pypa_build_debug/_primes.cpp

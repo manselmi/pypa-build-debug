@@ -1,0 +1,17 @@
+*.egg-info/
+*.log
+*.pyc
+*.swp
+*~
+.coverage*
+.DS_Store
+.mypy_cache/
+.tox/
+build/
+dist/
+report/
+wheelhouse/
+__pycache__/
+
+/src/pypa_build_debug/_primes.cpp
+/src/pypa_build_debug/_version.py

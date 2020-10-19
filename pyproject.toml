@@ -1,0 +1,149 @@
+[build-system]
+build-backend = 'setuptools.build_meta'
+requires = [
+  'Cython',
+  'setuptools',
+  'setuptools-scm[toml]',
+  'wheel',
+]
+
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.coverage.run]
+omit = [
+  '*/_version.py',
+]
+
+
+[tool.isort]
+# isort fails to read the config unless booleans are stringly-typed.
+combine_as_imports = 'true'
+combine_star = 'true'
+force_to_top = 'true'
+import_heading_cython = 'Cython imports'
+import_heading_firstparty = 'first-party imports'
+import_heading_future = 'future imports'
+import_heading_localfolder = 'local imports'
+import_heading_stdlib = 'stdlib imports'
+import_heading_thirdparty = 'third-party imports'
+include_trailing_comma = 'true'
+known_cython = [
+  'libcpp',
+]
+known_first_party = [
+  'pypa_build_debug',
+]
+known_third_party = [
+  'Cython',
+  'pytest',
+]
+lines_after_imports = 2
+line_length = 120
+multi_line_output = 3
+order_by_type = 'true'
+sections = [
+  'FUTURE',
+  'STDLIB',
+  'THIRDPARTY',
+  'CYTHON',
+  'FIRSTPARTY',
+  'LOCALFOLDER',
+]
+skip = [
+  '.cache',
+  '.git',
+  '.github',
+  '.mypy_cache',
+  '.pytest_cache',
+  '.tox',
+  'artifact',
+  'build',
+  'dist',
+  'pyvenv',
+  'report',
+  'venv',
+  '_version.py',
+  '__pycache__',
+]
+skip_glob = [
+  '*.egg-info',
+  '.coverage*',
+]
+use_parentheses = 'true'
+
+
+[tool.pytest.ini_options]
+addopts = [
+  '-r', 'a',
+  '--cov=pypa_build_debug',
+  '--import-mode=importlib',
+  '--verbosity=2',
+]
+junit_family = 'xunit2'
+python_files = [
+  'test_*.py',
+]
+python_functions = [
+  'test_*',
+]
+testpaths = [
+  'test',
+]
+xfail_strict = true
+
+
+[tool.setuptools_scm]
+local_scheme = 'node-and-timestamp'
+version_scheme = 'guess-next-dev'
+write_to = "src/pypa_build_debug/_version.py"
+
+
+[tool.tox]
+legacy_tox_ini = '''
+[tox]
+envlist =
+  flake8
+  isort
+  mypy
+  py36
+  py37
+  py38
+  py39
+isolated_build = true
+
+[testenv:flake8]
+commands =
+  flake8
+deps =
+  flake8
+skip_install = true
+
+[testenv:isort]
+commands =
+  isort --check-only --diff --quiet -- .
+deps =
+  isort
+skip_install = true
+
+[testenv:mypy]
+commands =
+  mypy --junit-xml={toxinidir}/report/junit/{envname}.xml -- setup.py src/pypa_build_debug
+deps =
+  mypy
+skip_install = true
+
+[testenv]
+commands =
+  pytest --basetemp={envtmpdir} --junitxml={toxinidir}/report/junit/{envname}.xml {posargs}
+deps =
+  coverage[toml]
+  importlib_metadata ; python_version < '3.8'
+  packaging
+  pytest
+  pytest-cov
+setenv =
+  COVERAGE_FILE = .coverage-{envname}
+'''
